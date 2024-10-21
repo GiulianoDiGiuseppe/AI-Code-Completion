@@ -1,0 +1,41 @@
+dataset_git : 
+  - https://github.com/GiulianoDiGiuseppe/Financial-Update
+  - https://github.com/GiulianoDiGiuseppe/Trenitalia-api-search
+  - https://github.com/GiulianoDiGiuseppe/Dasboard-with-DB-from-Notion
+folder_save_dataset : ['data' ,'repositories']
+programming_language : 
+  python :
+    # triggers : ['await', 'assert', 'raise', 'del', 'lambda', 'yield', 'return','print','logger',
+    #         'logging','while', 'for', 'if', 'elif', 'else', 'global', 'in', 'and', 'not', 
+    #         'or', 'is', 'with', 'except', '.', '+', '-', '*', '/', '%', '**', '<<', ".",
+    #         '>>', '&', '|', '^', '==', '!=', '<=', '>=', '+=', '-=', '=', '<', '>', 
+    #         ';', ',', '[', '(', '{', '~']
+    triggers : ['await', 'assert', 'raise', 'del', 'lambda', 'yield', 'return','print','logger',
+            'logging','while', 'for', 'if', 'elif', 'else', 'global', 
+            'or', 'is', 'with', 'except', '.', '+', '-', '*', '%', ".",
+             '|', '^', '==', '!=', '<=', '>=', '+=', '-=', '=', '<', '>', 
+            ';', ',', '[', '(', '{', '~']
+    extensions : ['.py']
+    comment : '#'
+    comment_multiline : ['"""','"""']
+    comment_singleline : ['#']
+path_csv_dataset : 'data/dataset2.csv'
+model_activation : 'bigcode/tiny_starcoder_py'
+models_configuration : 
+  parameters :
+    max_new_tokens: 12  # Maximum number of new tokens to generate in the output.
+    min_new_tokens: 2   # Minimum number of new tokens to generate in the output.
+    temperature: 0.3    # Controls the randomness of predictions. Lower values make the output more deterministic, while higher values increase randomness.
+    top_k: 50           # Limits the sampling pool to the top K most likely next tokens. This reduces the potential randomness in outputs.
+    top_p: 0.95         # Implements nucleus sampling. The model considers only the smallest set of tokens whose cumulative probability exceeds p (0.95 in this case).
+    repetition_penalty: 1.0  # Penalizes repeated tokens in the output. A value greater than 1 discourages repetition, while values less than 1 encourage it.
+    num_return_sequences: 1  # Number of distinct sequences to generate from the same input. Set to 1 for a single output.
+    # # do_sample: true      # Enables sampling. When set to false, the model will use greedy decoding, always choosing the most likely next token.
+    # early_stopping: true  # Stops the generation process when the model reaches an end-of-sequence token (EOS) if enabled.
+    # length_penalty: 0.5   # Adjusts the likelihood of generating longer sequences. Values greater than 1 encourage shorter sequences, and values less than 1 encourage longer sequences.
+    # pad_token_id: 0     # Token ID for the padding token. Replace null with the actual ID if padding is needed.
+    # eos_token_id: null    # Token ID for the end-of-sequence token. Replace null with the actual ID if needed for proper termination.
+    # max_time: null        # Maximum time allowed for generating a response. Replace null with an actual time value if time limits are required.
+    # num_beams: 5         # Number of beams for beam search, which is a technique for generating multiple outputs by exploring the most promising sequences.
+    # # remove_invalid_values: true  # If true, it removes any invalid tokens or sequences from the output, ensuring valid outputs.
+    # repetition_penalty_range: null  # Defines a range for the repetition penalty. Replace null with a specific value if needed to fine-tune the repetition control.
