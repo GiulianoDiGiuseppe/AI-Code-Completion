@@ -1,0 +1,75 @@
+data/dataset
+data/repositories
+*.csv
+*.json
+*.ipynb
+
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+dist/
+build/
+
+# Python Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and Editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Coverage reports
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+
+# Python test files
+test_*.py
+*_test.py
+*.pytest_cache/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+
+# Pyre type checker
+.pyre/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pylint
+pylint.log
+
+# Bandit
+bandit.yaml
+
+# Sphinx documentation
+docs/_build/
+
+# Pyenv
+.python-version
+
+# Local environment variables
+.env
+.env.*
