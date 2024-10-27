@@ -43,15 +43,19 @@ class ModelHandler:
 
         generated_texts = []
         for output in outputs:
-            # Find where the input ends
-            input_len = input_ids.shape[-1]  # Get the length of the input (number of tokens in input)
-
-            # Extract the newly generated tokens (after the input)
-            new_tokens = output[input_len:].tolist()  # Convert the tensor to a list of token IDs
+            generated_text = self.tokenizer.decode(output)
             
-            # Decode only the new tokens
-            generated_text = self.tokenizer.decode(new_tokens, skip_special_tokens=skip_special_tokens)
-            generated_texts.append(generated_text)
+            # Find the start of <fim_middle> and the first <|endoftext|>
+            fim_middle_idx = generated_text.find('<fim_middle>')
+            endoftext_idx = generated_text.find('<|endoftext|>')
+
+            # Extract the text between <fim_middle> and the first <|endoftext|>
+            if fim_middle_idx != -1 and endoftext_idx != -1:
+                extracted_text = generated_text[fim_middle_idx + len('<fim_middle>'):endoftext_idx].strip()
+                generated_texts.append(extracted_text)
+            else:
+                # If either marker is not found, add the full generated text as fallback
+                generated_texts.append(generated_text)
 
         # Return the newly generated text
         return generated_texts
