@@ -1,8 +1,3 @@
-
-# WORKFLOW
-
-![Alt text](./images/Workflow.svg)
-
 # Setup
 
 ## Step 1: Create a Virtual Environment with Python 3.12
@@ -77,27 +72,12 @@ programming_language :
 
 Replace `path/to/your/dataset` and `path/to/output/directory` with the actual paths on your system. Adjust `dataset_git`, `folder_save_dataset`, and their values according to the specific requirements of your scripts.
 
-## Step 4: Creation Dataset
+# Preprocessing
 
-The creation of dataset is an **ETL pipeline** designed to extract, transform, and load Python code from Git repositories. The pipeline processes repositories to create a dataset of code completions, splitting code into `prefix`, `middle`, and `suffix` for tasks like code completion or machine learning.
-
-After modifying the `config.yaml`, run the data generation scripts in the `scripts` folder:
-
-```bash
-python -m scripts.0_create_dataset
-```
-
-The data to be collected is obtained from the following repositories:
-
-- YouTube-Video-Classification-on-Twitter-and-Homeworks
-- Diode
-- HASHCODE-2020-Qualification-Round
-
-### Key Steps in the Pipeline
+Key Steps in the Pipeline
 
 1. **Extraction**: Clone repositories from the URLs specified in the configuration file.
 
-   - 
    - **`library`**: Contains all import statements.
    - **`functions`**: A dictionary with function names as keys and the corresponding function code as values.
    - **`classes`**: A dictionary where each key is a class name. Each class includes:
@@ -118,13 +98,29 @@ The data to be collected is obtained from the following repositories:
 
    - `=`, `(`, `:`, `.`, `,`, `+`, `-`, `*`, `/`
 
-## Step 5: Data Filter and Classification
+## Creation Dataset
+
+Creating the dataset involves an **ETL pipeline** designed to extract, transform, and load Python code from Git repositories. The pipeline processes repositories to create a dataset of code completions, splitting the code into `prefix`, `middle`, and `suffix` for tasks like code completion or machine learning.
+
+After modifying the `config.yaml`, run the data generation scripts in the `scripts` folder:
+
+```bash
+python -m scripts.0_create_dataset
+```
+
+The data to be collected is obtained from the following repositories:
+
+- YouTube-Video-Classification-on-Twitter-and-Homeworks
+- Diode
+- HASHCODE-2020-Qualification-Round
+
+## Data Filter and Classification
 
 The process generates a large number of code completion samples. For example, running the pipeline on **three moderately-sized repositories** resulted in  **more than 1000 samples** . To ensure the dataset is manageable, a subset of the generated samples will be **manually selected** based on relevance, diversity, and quality. This allows for fine-tuning of the dataset for the specific task while avoiding redundancy or overly similar samples.
 
 In addition to filtering, it is essential to **assign a taxonomy type** to each completion sample based on its nature. This assignment helps to categorize the completions according to their functionality, allowing for better analysis and understanding of the dataset.
 
-### Custom "Taxonomy" of CODE COMPLETION
+## Custom "Taxonomy" of CODE COMPLETION
 
 This document outlines a comprehensive taxonomy for code completions, categorizing different types of coding tasks into a **General** classification and a more detailed **Specific** classification. This taxonomy is designed to help developers prioritize and select tasks based on their complexity and requirements.
 
@@ -140,21 +136,9 @@ This document outlines a comprehensive taxonomy for code completions, categorizi
 
 This taxonomy can help determine the composition of the dataset and provide insights into which models excel in specific areas. By categorizing code completion types and assigning the corresponding taxonomy to each completion sample, we can identify patterns and strengths in the underlying data, enabling more targeted training and optimization of models for various tasks.
 
-### Assigning Human Scores
+# Predictions
 
-For each generated completion, a **HumanScoreX** will be assigned to evaluate its quality on a scale from  **1 to 5** , where:
-
-* **1** : Poor quality - does not meet basic requirements.
-* **2** : Fair quality - partially meets requirements but has significant issues.
-* **3** : Good quality - meets requirements but may have minor flaws.
-* **4** : Very good quality - mostly meets requirements with few issues.
-* **5** : Excellent quality - fully meets all requirements and expectations.
-
-This scoring will help in the evaluation process of the model and provide insights into areas that require improvement.
-
-## Step 6 : Configuring Model Parameters
-
-You can configure various model parameters by editing the `config.yaml` file. This allows you to customize the behavior of the code completion model.
+You can **configure** various model parameters by editing the `config.yaml` file. This allows you to customize the behavior of the code completion model.
 
 ```yaml
 model_activation : 'bigcode/tiny_starcoder_py'
@@ -179,15 +163,27 @@ models_configuration :
 
 ```
 
-### Running the Code
+**Running the Code:**
 
 To execute the code for generating code completion results, use the following command in your terminal:
 
 ```bash
-python -m src.generate_results
+python -m src.1_generate_results
 ```
 
-#### Output
+## Assigning Human Scores
+
+For each generated completion, a **HumanScoreX** will be assigned to evaluate its quality on a scale from  **1 to 5** , where:
+
+* **1** : Poor quality - does not meet basic requirements.
+* **2** : Fair quality - partially meets requirements but has significant issues.
+* **3** : Good quality - meets requirements but may have minor flaws.
+* **4** : Very good quality - mostly meets requirements with few issues.
+* **5** : Excellent quality - fully meets all requirements and expectations.
+
+This scoring will help in the evaluation process of the model and provide insights into areas that require improvement.
+
+### Output
 
 Upon running the command, a folder named `experiments` will be created in the project directory. This folder will contain the following files:
 
@@ -203,7 +199,7 @@ Upon running the command, a folder named `experiments` will be created in the pr
 
 Ensure you have the necessary dependencies installed and your environment set up correctly before running the code.
 
-# Step 7: Model Evaluation
+# Evaluation
 
 This section outlines the proposed automatic metrics for evaluating the quality of the code completion model. The goal is to assess the model's performance and identify which metrics correlate best with human judgment.
 
@@ -217,8 +213,6 @@ To determine which of the proposed metrics aligns best with human judgment, foll
 * **ROUGE** : Assesses recall by comparing n-grams and longest common subsequences.
 
 2. **Human Evaluation** : Gather a sample of model outputs and evaluate them based on your judgment. Score them on a predefined scale (e.g., 1 to 5) to quantify your assessment of their quality.
-
-### Running the Code
 
 To execute the code for generating code completion results, use the following command in your terminal:
 
@@ -237,7 +231,7 @@ The matrix displays the meancompletion mean_HumanScore1, BLEU, and ROUGE-L metri
 | FIM                | 2.333333                   | 0.170557            | 0.315785               | 15              |
 | LDU                | 2.000000                   | 0.067566            | 0.291205               | 4               |
 
-# Simplifications
+## Simplifications
 
 * **Focus Area** :The analysis targeted Python code from a private repository with notable clarity issues.
 * **Lengthy Prompts** : Overly long prompts were ineffective for generating meaningful completions.
@@ -248,10 +242,10 @@ The matrix displays the meancompletion mean_HumanScore1, BLEU, and ROUGE-L metri
 
 * Higher HumanScores **correlate** with better BLEU scores, particularly for **CST **.
 * The positive trend in HumanScores aligns with increased ROUGE-L metrics, especially for  **CST** .
-* **DMT** 's metrics are based on a single sample, limiting reliability. While a greater sample count in **FIM** and **CST** provides more reliable insights into model performance.
+* **DMT** 's metrics are basd on a single sample, limiting reliability. While a greater sample count in **FIM** and **CST** provides more reliable insights into model performance.
 * **CST** and **DMT** shows balanced metrics, indicating consistent code quality.
 
-## Future Work
+# Future Work
 
 In future work, we will focus on improving the dataset creation with particular emphasis on the following aspects:
 
