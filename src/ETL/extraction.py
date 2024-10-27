@@ -3,17 +3,17 @@ import subprocess
 from src.utils.logger_utils import *
 from typing import Dict, List, Callable
 
-# Configura il logger
+# Set up the logger
 
 def clone_repositories(repos: List[str], target_folder: str) -> None:
     """
-    Clona i repository nella cartella di destinazione.
+    Clones the repositories into the target folder.
 
     Args:
-        repos (List[str]): Lista di URL dei repository da clonare.
-        target_folder (str): La cartella in cui i repository verranno clonati.
+        repos (List[str]): List of repository URLs to clone.
+        target_folder (str): The folder where the repositories will be cloned.
     """
-    # Salva la directory corrente
+    # Save the current directory
     current_dir = os.getcwd()
 
     try:
@@ -33,19 +33,19 @@ def clone_repositories(repos: List[str], target_folder: str) -> None:
                 logger.info(f"The repository {repo_name} already exists, skipping...")
     
     finally:
-        # Ritorna alla directory originale
+        # Return to the original directory
         os.chdir(current_dir)
         logger.debug(f"Returned to original directory: {current_dir}")
 
 def get_python_files_content(repo_folder: str) -> Dict[str, str]:
     """
-    Restituisce un dizionario con i file Python (.py) e il loro contenuto.
+    Returns a dictionary with Python (.py) files and their content.
 
     Args:
-        repo_folder (str): La cartella radice del repository.
+        repo_folder (str): The root folder of the repository.
 
     Returns:
-        Dict[str, str]: Un dizionario con i percorsi dei file come chiavi e il contenuto come valori.
+        Dict[str, str]: A dictionary with file paths as keys and content as values.
     """
     py_files_content = {}
     
@@ -66,27 +66,27 @@ def get_python_files_content(repo_folder: str) -> Dict[str, str]:
 def process_repositories(config_repo: List[str], target_folder: str,
                          all_python_files: Dict[str, str] = {}) -> None:
     """
-    Processa i repository git specificati in config_repo, estraendo e aggiornando i contenuti dei file Python da ciascun repository.
+    Processes the specified git repositories in config_repo, extracting and updating the content of Python files from each repository.
 
     Args:
-        config (Dict[str, List[str]]): Dizionario di configurazione contenente la chiave "dataset_git", che è una lista di URL dei repository git.
-        target_folder (str): La cartella di destinazione in cui sono presenti i repository locali.
-        all_python_files (Dict[str, str]): Dizionario che contiene i contenuti di tutti i file Python processati.
+        config_repo (List[str]): List of repository URLs to process.
+        target_folder (str): The target folder where local repositories are located.
+        all_python_files (Dict[str, str]): Dictionary containing the contents of all processed Python files.
 
     Returns:
         None
     """
     for repo in config_repo:
-        # Estrae il nome del repository
+        # Extract the repository name
         repo_name = repo.split('/')[-1].replace('.git', '')
         repo_folder = os.path.join(target_folder, repo_name)
         
-        # Verifica se la cartella del repository esiste
+        # Check if the repository folder exists
         if os.path.exists(repo_folder):
             logger.info(f"Processing Python files in repository: {repo_name}")
-            # Ottiene i contenuti dei file Python dal repository
+            # Get the content of Python files from the repository
             python_files_content = get_python_files_content(repo_folder)
-            # Aggiorna il dizionario con i nuovi contenuti
+            # Update the dictionary with new contents
             all_python_files.update(python_files_content)
         else:
             logger.warning(f"Repository folder {repo_folder} not found, skipping...")

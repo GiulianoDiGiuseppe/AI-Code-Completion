@@ -3,43 +3,43 @@ from typing import List, Dict
 
 def extract_used_functions(function_body: str, available_functions: list, current_function: str) -> list:
     """
-    Estrai le funzioni usate nel corpo di una funzione, escludendo la funzione stessa.
+    Extracts the functions used in the body of a function, excluding the function itself.
 
     Args:
-        function_body (str): Il corpo della funzione corrente.
-        available_functions (list): L'elenco di tutte le funzioni disponibili.
-        current_function (str): Il nome della funzione corrente.
+        function_body (str): The body of the current function.
+        available_functions (list): The list of all available functions.
+        current_function (str): The name of the current function.
 
     Returns:
-        list: Un elenco delle funzioni usate nel corpo della funzione.
+        list: A list of functions used in the body of the function.
     """
     return [func for func in available_functions if func in function_body and func != current_function]
 
 
 def extract_used_classes(function_body: str, available_classes: list) -> list:
     """
-    Estrai le classi usate nel corpo di una funzione.
+    Extracts the classes used in the body of a function.
 
     Args:
-        function_body (str): Il corpo della funzione corrente.
-        available_classes (list): L'elenco di tutte le classi disponibili.
+        function_body (str): The body of the current function.
+        available_classes (list): The list of all available classes.
 
     Returns:
-        list: Un elenco delle classi usate nel corpo della funzione.
+        list: A list of classes used in the body of the function.
     """
     return [cls for cls in available_classes if cls in function_body]
 
 
 def extract_class_methods_used(function_body: str, class_methods: dict) -> dict:
     """
-    Estrai i metodi di una classe che vengono utilizzati nel corpo di una funzione.
+    Extracts the class methods that are used in the body of a function.
 
     Args:
-        function_body (str): Il corpo della funzione corrente.
-        class_methods (dict): Un dizionario dei metodi della classe.
+        function_body (str): The body of the current function.
+        class_methods (dict): A dictionary of class methods.
 
     Returns:
-        dict: Un dizionario con i metodi della classe usati nella funzione.
+        dict: A dictionary with the class methods used in the function.
     """
     used_methods = {method_name: method_body for method_name, method_body in class_methods.items() if method_name in function_body}
     return used_methods
@@ -47,14 +47,14 @@ def extract_class_methods_used(function_body: str, class_methods: dict) -> dict:
 
 def format_function_calls(functions: list, repository: dict) -> str:
     """
-    Crea una stringa formattata con le definizioni delle funzioni usate.
+    Creates a formatted string with the definitions of the used functions.
 
     Args:
-        functions (list): Un elenco delle funzioni usate.
-        repository (dict): Il repository contenente le funzioni e le loro definizioni.
+        functions (list): A list of used functions.
+        repository (dict): The repository containing the functions and their definitions.
 
     Returns:
-        str: La concatenazione delle definizioni delle funzioni usate.
+        str: The concatenation of the definitions of the used functions.
     """
     formatted_functions = ""
     for func in functions:
@@ -64,17 +64,17 @@ def format_function_calls(functions: list, repository: dict) -> str:
 
 def format_class_methods(class_name: str, class_info: dict) -> str:
     """
-    Crea una stringa formattata con la definizione di una classe e i suoi metodi.
+    Creates a formatted string with the definition of a class and its methods.
 
     Args:
-        class_name (str): Il nome della classe.
-        class_info (dict): Le informazioni della classe, inclusi metodi e init.
+        class_name (str): The name of the class.
+        class_info (dict): The class information, including methods and init.
 
     Returns:
-        str: La definizione della classe formattata come stringa.
+        str: The definition of the class formatted as a string.
     """
     formatted_class = f"class {class_name}:\n"
-    formatted_class += f"    {class_info.get('__init__', '')}\n"  # Aggiungi il metodo __init__ se esiste
+    formatted_class += f"    {class_info.get('__init__', '')}\n"  # Add the __init__ method if it exists
     for method_name, method_body in class_info['methods'].items():
         formatted_class += f"    def {method_name}(self):\n        {method_body}\n"
     return formatted_class
@@ -82,13 +82,13 @@ def format_class_methods(class_name: str, class_info: dict) -> str:
 
 def creation_input_output(repository: dict) -> tuple:
     """
-    Crea una rappresentazione formattata delle funzioni e delle classi usate nel repository.
+    Creates a formatted representation of the functions and classes used in the repository.
 
     Args:
-        repository (dict): Un dizionario contenente funzioni e classi con i loro metodi.
+        repository (dict): A dictionary containing functions and classes with their methods.
 
     Returns:
-        tuple: Un elenco delle funzioni formattate e un elenco delle definizioni di funzioni.
+        tuple: A list of formatted functions and a list of function bodies.
     """
     formatted_results, function_bodies = [], []
     
@@ -96,26 +96,27 @@ def creation_input_output(repository: dict) -> tuple:
     all_classes = list(repository['classes'].keys())
     
     for func_name, func_body in repository['functions'].items():
-        # Estrai le funzioni usate nella funzione corrente
+        # Extract the functions used in the current function
         used_functions = extract_used_functions(func_body, all_functions, func_name)
         
-        # Estrai le classi usate nella funzione corrente
+        # Extract the classes used in the current function
         used_classes = extract_used_classes(func_body, all_classes)
         
-        # Inizia a formattare il codice
+        # Start formatting the code
         formatted_code = ""
         
-        # Aggiungi le definizioni delle funzioni usate
+        # Add the definitions of the used functions
         formatted_code += format_function_calls(used_functions, repository)
         
-        # Aggiungi le definizioni delle classi e dei loro metodi usati
+        # Add the definitions of the classes and their used methods
         for class_name in used_classes:
             class_info = repository['classes'][class_name]
             class_methods_used = extract_class_methods_used(func_body, class_info['methods'])
             
             if class_methods_used:
                 formatted_code += format_class_methods(class_name, class_info)
-        # Aggiungi il codice formattato ai risultati
+                
+        # Add the formatted code to the results
         formatted_results.append(formatted_code)
         function_bodies.append(func_body)
     
@@ -125,59 +126,61 @@ def creation_input_output(repository: dict) -> tuple:
 class CodeProcessor:
     def __init__(self, triggers: List[str]):
         """
-        Inizializza il processore con una lista di trigger che separano il codice.
+        Initializes the processor with a list of triggers that separate the code.
         
-        :param triggers: Lista di stringhe che rappresentano i trigger.
+        :param triggers: List of strings representing the triggers.
         """
         self.triggers = triggers
 
-    def process_code(self, code_string: str, suffix: str = '', selector_lines : str ='random') -> List[Dict[str, str]]:
+    def process_code(self, code_string: str, suffix: str = '', selector_lines: str = 'random') -> List[Dict[str, str]]:
         """
-        Processa un codice sorgente identificando i triggers e separando il codice in prefissi e suffissi.
+        Processes source code by identifying the triggers and separating the code into prefixes and suffixes.
 
-        :param code_string: Il codice da processare.
-        :param suffix: Una stringa opzionale per personalizzare il suffisso.
-        :return: Una lista di dizionari contenenti 'Prefix', 'Suffix' e 'Label'.
+        :param code_string: The code to process.
+        :param suffix: An optional string to customize the suffix.
+        :param selector_lines: Determines how many lines to process ('random' or specific count).
+        :return: A list of dictionaries containing 'Prefix', 'Suffix', and 'Label'.
         """
-        # Dividiamo il codice in righe
+        # Split the code into lines
         lines = code_string.split('\n')
         
-        # Selezioniamo un numero randomico di righe fino al numero totale delle righe
+        # Select a random number of lines up to the total number of lines
         if selector_lines == 'random':
-            num_lines_to_process = random.randint(1, int(len(lines)))
+            num_lines_to_process = random.randint(1, len(lines))
         else:
-            num_lines_to_process = int(len(lines)-1)
+            num_lines_to_process = int(len(lines) - 1)
         
-        # Lista per immagazzinare le linee processate e i dizionari
+        # List to store processed lines and dictionaries
         dataset = []
         
         for i in range(num_lines_to_process):
             line = lines[i]
             for trigger in self.triggers:
                 if trigger in line:
-                    # Separiamo la parte prima e dopo il trigger
+                    # Separate the part before and after the trigger
                     prefix, _, line_suffix = line.partition(trigger)
                     
-                    # Aggiungiamo un dizionario con le parti rilevanti
+                    # Add a dictionary with the relevant parts
                     dataset.append({
                         'Prefix': '\n'.join(lines[:i] + [prefix + trigger]),
-                        'Suffix': '\n'.join(lines[i+1:]),
-                        'Label': line_suffix   # Aggiungiamo il suffisso
+                        'Suffix': '\n'.join(lines[i + 1:]),
+                        'Label': line_suffix   # Add the suffix
                     })
         
         return dataset
 
 
-def create_dataset(result: Dict[str, List[List[str]]], triggers: List[str],selector_lines:str="random" ) -> List[Dict[str, str]]:
+def create_dataset(result: Dict[str, List[List[str]]], triggers: List[str], selector_lines: str = "random") -> List[Dict[str, str]]:
     """
-    Processa tutti i repository e le funzioni in essi contenute.
+    Processes all repositories and the functions contained within them.
 
-    :param result: Un dizionario con i dati del repository, in cui ogni chiave è un repository,
-                   e il valore è una lista con due elementi:
-                   - Un elenco di nomi delle funzioni.
-                   - Un elenco di stringhe del codice sorgente delle funzioni.
-    :param triggers: Una lista di trigger per la separazione del codice.
-    :return: Un dataset completo di prefissi, suffissi e etichette.
+    :param result: A dictionary with repository data, where each key is a repository,
+                   and the value is a list with two elements:
+                   - A list of function names.
+                   - A list of source code strings for the functions.
+    :param triggers: A list of triggers for separating the code.
+    :param selector_lines: Determines how many lines to process ('random' or specific count).
+    :return: A complete dataset of prefixes, suffixes, and labels.
     """
     processor = CodeProcessor(triggers)
     dataset = []
@@ -187,7 +190,6 @@ def create_dataset(result: Dict[str, List[List[str]]], triggers: List[str],selec
         
         for index, code in enumerate(codes):
             function_name = functions[index]
-            dataset += processor.process_code(code, function_name,selector_lines=selector_lines)
+            dataset += processor.process_code(code, function_name, selector_lines=selector_lines)
     
     return dataset
-

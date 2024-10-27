@@ -6,15 +6,15 @@ from src.utils.logger_utils import *
 
 class ClassExtractor(ast.NodeVisitor):
     """
-    Classe per estrarre i nomi delle classi, metodi (incluso __init__) e il loro codice sorgente dal codice Python.
+    Class to extract class names, methods (including __init__), and their source code from Python code.
 
     Args:
-        file_content (str): Il contenuto del file Python da analizzare.
+        file_content (str): The content of the Python file to analyze.
     
     Attributes:
-        classes (dict): Dizionario che memorizza informazioni sulle classi, con 'init' e 'methods'.
-        file_content (str): Il contenuto del file passato.
-        lines (list): Lista di linee del file, utile per l'estrazione del codice sorgente.
+        classes (dict): Dictionary that stores information about classes, with 'init' and 'methods'.
+        file_content (str): The content of the provided file.
+        lines (list): List of lines from the file, useful for extracting source code.
     """
     def __init__(self, file_content: str):
         self.classes = {}
@@ -24,10 +24,10 @@ class ClassExtractor(ast.NodeVisitor):
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         """
-        Visita la definizione della classe e ne estrae i metodi e il costruttore __init__.
+        Visits the class definition and extracts its methods and the __init__ constructor.
 
         Args:
-            node (ast.ClassDef): Nodo AST rappresentante una definizione di classe.
+            node (ast.ClassDef): AST node representing a class definition.
         """
         class_name = node.name
         class_info = {'init': '', 'methods': {}}
@@ -49,13 +49,13 @@ class ClassExtractor(ast.NodeVisitor):
 
     def get_function_code(self, node: ast.FunctionDef) -> str:
         """
-        Estrae il codice sorgente della funzione.
+        Extracts the source code of the function.
 
         Args:
-            node (ast.FunctionDef): Nodo AST rappresentante una funzione o metodo.
+            node (ast.FunctionDef): AST node representing a function or method.
 
         Returns:
-            str: Il codice sorgente della funzione o metodo.
+            str: The source code of the function or method.
         """
         start_line = node.lineno - 1
         end_line = node.body[-1].lineno
@@ -64,15 +64,15 @@ class ClassExtractor(ast.NodeVisitor):
 
 class FunctionExtractor(ast.NodeVisitor):
     """
-    Classe per estrarre i nomi delle funzioni e il loro codice sorgente completo dal codice Python.
+    Class to extract function names and their complete source code from Python code.
 
     Args:
-        file_content (str): Il contenuto del file Python da analizzare.
+        file_content (str): The content of the Python file to analyze.
     
     Attributes:
-        functions (dict): Dizionario che memorizza le funzioni e il loro codice.
-        file_content (str): Il contenuto del file passato.
-        lines (list): Lista di linee del file, utile per l'estrazione del codice sorgente.
+        functions (dict): Dictionary that stores functions and their code.
+        file_content (str): The content of the provided file.
+        lines (list): List of lines from the file, useful for extracting source code.
     """
     def __init__(self, file_content: str):
         self.functions = {}
@@ -82,10 +82,10 @@ class FunctionExtractor(ast.NodeVisitor):
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
         """
-        Visita la definizione della funzione e ne estrae il nome e il codice sorgente.
+        Visits the function definition and extracts its name and source code.
 
         Args:
-            node (ast.FunctionDef): Nodo AST rappresentante una funzione.
+            node (ast.FunctionDef): AST node representing a function.
         """
         function_name = node.name
         function_code = self.get_function_code(node)
@@ -94,13 +94,13 @@ class FunctionExtractor(ast.NodeVisitor):
 
     def get_function_code(self, node: ast.FunctionDef) -> str:
         """
-        Estrae il codice sorgente della funzione.
+        Extracts the source code of the function.
 
         Args:
-            node (ast.FunctionDef): Nodo AST rappresentante una funzione.
+            node (ast.FunctionDef): AST node representing a function.
 
         Returns:
-            str: Il codice sorgente della funzione.
+            str: The source code of the function.
         """
         start_line = node.lineno - 1
         end_line = node.body[-1].lineno
@@ -109,13 +109,13 @@ class FunctionExtractor(ast.NodeVisitor):
 
 def extract_lib_func_class_global(file_content: str) -> dict:
     """
-    Preprocessa il contenuto di un file Python per estrarre librerie, funzioni, classi (con __init__ e metodi) e codice globale.
+    Preprocesses the content of a Python file to extract libraries, functions, classes (with __init__ and methods), and global code.
 
     Args:
-        file_content (str): Il contenuto di un file Python come stringa.
+        file_content (str): The content of a Python file as a string.
 
     Returns:
-        dict: Un dizionario contenente le librerie importate, le funzioni, le classi e il codice globale.
+        dict: A dictionary containing the imported libraries, functions, classes, and global code.
     """
     result = {
         'library': '',
@@ -163,13 +163,13 @@ def extract_lib_func_class_global(file_content: str) -> dict:
 
 def extract_entity_for_all_repo(py_files_content: dict) -> dict:
     """
-    Preprocessa tutti i file Python per estrarre librerie, funzioni (con codice), classi (con init e metodi) e codice globale.
+    Preprocesses all Python files to extract libraries, functions (with code), classes (with init and methods), and global code.
 
     Args:
-        py_files_content (dict): Dizionario con i nomi dei file come chiavi e il contenuto dei file Python come valori.
+        py_files_content (dict): Dictionary with file names as keys and the content of the Python files as values.
 
     Returns:
-        dict: Un dizionario con le informazioni preprocessate per ciascun file.
+        dict: A dictionary with preprocessed information for each file.
     """
     processed_data = {}
     logger.info("Starting to process all Python files.")
@@ -183,32 +183,32 @@ def extract_entity_for_all_repo(py_files_content: dict) -> dict:
 
 def extract_subfolders(path: str, num_folders: int) -> str:
     """
-    Estrae i primi `num_folders` sottocartelle dal percorso specificato.
+    Extracts the first `num_folders` subfolders from the specified path.
 
     Parameters:
     -----------
     path : str
-        Il percorso completo del file o della directory, che può contenere separatori misti.
+        The complete path of the file or directory, which may contain mixed separators.
     num_folders : int
-        Il numero di sottocartelle da estrarre dal percorso iniziale.
+        The number of subfolders to extract from the initial path.
 
     Returns:
     --------
     str
-        La parte del percorso che contiene solo le prime `num_folders` sottocartelle.
+        The part of the path that contains only the first `num_folders` subfolders.
 
     Example:
     --------
     >>> extract_subfolders('data/repositories\\Financial-Update\\main.py', 3)
     'data/repositories/Financial-Update'
     """
-    # Normalizza il percorso per gestire correttamente i separatori di directory
+    # Normalize the path to correctly handle directory separators
     normalized_path = os.path.normpath(path)
     parts = normalized_path.split(os.sep)
 
     logger.debug(f"Normalized path: {normalized_path}, Extracted parts: {parts[:num_folders]}")
     
-    # Estrai le prime `num_folders` sottocartelle
+    # Extract the first `num_folders` subfolders
     extracted_folders = os.sep.join(parts[:num_folders])
     
     logger.info(f"Extracted subfolders: {extracted_folders} from path: {path}")
@@ -217,19 +217,19 @@ def extract_subfolders(path: str, num_folders: int) -> str:
 
 def build_set_of_repositories(processed_files: dict, num_folders: int) -> set:
     """
-    Crea un set di percorsi delle sottocartelle di terzo livello a partire dalle chiavi di processed_files.
+    Creates a set of third-level subfolder paths from the keys of processed_files.
 
     Parameters:
     -----------
     processed_files : dict
-        Un dizionario contenente i percorsi completi come chiavi.
+        A dictionary containing the complete paths as keys.
     num_folders : int
-        Numero di sottocartelle da estrarre.
+        Number of subfolders to extract.
 
     Returns:
     --------
     set
-        Un set contenente le sottocartelle estratte.
+        A set containing the extracted subfolders.
     """
     set_repository = set()
     
@@ -244,19 +244,19 @@ def build_set_of_repositories(processed_files: dict, num_folders: int) -> set:
 
 def merge_python_files_by_repository(processed_files: dict, set_repository: set) -> dict:
     """
-    Unisce i contenuti dei file Python per repository in base ai percorsi delle sottocartelle estratti.
+    Merges the contents of Python files by repository based on the extracted subfolder paths.
 
     Parameters:
     -----------
     processed_files : dict
-        Un dizionario con i percorsi completi come chiavi e le relative informazioni sul file come valori.
+        A dictionary with complete paths as keys and their corresponding file information as values.
     set_repository : set
-        Un set contenente le sottocartelle estratte.
+        A set containing the extracted subfolders.
 
     Returns:
     --------
     dict
-        Un dizionario contenente i file uniti per ciascun repository.
+        A dictionary containing merged files for each repository.
     """
     merged_python_files = {}
 
