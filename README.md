@@ -1,3 +1,16 @@
+# Project Description
+
+This project aims to develop a dataset and model for Python code completion using an ETL (Extract, Transform, Load) pipeline. It includes:
+
+1. **Repository Cloning** : Cloning specified GitHub repositories to extract Python files, focusing on imports, functions, classes, and global variables.
+2. **Code Parsing** : Parsing the extracted code to create segments (prefix, middle, suffix) based on triggers, essential for training predictive models.
+3. **Dataset Creation** : Generating a structured dataset that pairs incomplete code with expected completions, refined through manual quality selection.
+4. **Custom Taxonomy** : Categorizing code completions by complexity and functionality to enhance analysis and training.
+5. **Model Training and Evaluation** : Configuring an LLM to generate code completions, with performance assessed using BLEU and ROUGE metrics.
+6. **Future Enhancements** : Plans for improving trigger optimization, automatic docstring generation, multi-line completion, and support for additional programming languages.
+
+This project enhances Python coding efficiency and learning through improved code completion capabilities.
+
 # Setup
 
 ## Step 1: Create a Virtual Environment with Python 3.12
